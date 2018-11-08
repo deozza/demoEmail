@@ -8,10 +8,18 @@
         <th scope="col">Expéditeur</th>
         <th scope="col">Objet</th>
         <th scope="col">Date d'envoi</th>
+        <th scope="col">Pièce jointe</th>
     </tr>
     </thead>
     <tbody>
-
+    {% if emails is not null and emails is defined%}
+        {% for email in emails %}
+            <td>{{ email.senderEmail }}</td>
+            <td>{{ email.object}}</td>
+            <td>{{ email.timestamp|date('d/m/Y') }}</td>
+            <td>{{ email.nbAttachment }}</td>
+        {% endfor %}
+    {% endif %}
     </tbody>
 </table>
 

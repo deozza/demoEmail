@@ -36,6 +36,19 @@ class Email
     private $senderEmail;
 
     /**
+     * email of the recipient
+     * @var string
+     *
+     * @ORM\Column(name="recipient_email", type="string", nullable=false)
+     * @Assert\Type("string")
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
+     */
+    private $recipientEmail;
+
+    /**
      * object of the email
      * @var string
      *
@@ -55,13 +68,22 @@ class Email
 
 
     /**
-     * date of reception
-     * @var \DateTime
+     * timestamp of reception
+     * @var int
      *
-     * @ORM\Column(name="reception_date", type="datetime", nullable=false)
-     * @Assert\DateTime
+     * @ORM\Column(name="timestamp", type="integer", nullable=false)
+     * @Assert\Type("integer")
      */
-    private $receptionDate;
+    private $timestamp;
+
+    /**
+     * email of the sender
+     * @var integer
+     *
+     * @ORM\Column(name="nb_attachment", type="integer", nullable=false)
+     * @Assert\Type("integer")
+     */
+    private $nbAttachment;
 
 
     /**
@@ -88,6 +110,22 @@ class Email
     public function setSenderEmail($senderEmail)
     {
         $this->senderEmail = $senderEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecipientEmail()
+    {
+        return $this->recipientEmail;
+    }
+
+    /**
+     * @param string $recipientEmail
+     */
+    public function setRecipientEmail($recipientEmail)
+    {
+        $this->recipientEmail = $recipientEmail;
     }
 
     /**
@@ -123,19 +161,36 @@ class Email
     }
 
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getReceptionDate()
+    public function getNbAttachment()
     {
-        return $this->receptionDate;
+        return $this->nbAttachment;
     }
 
     /**
-     * @param \DateTime $receptionDate
+     * @param int $nbAttachment
      */
-    public function setReceptionDate($receptionDate)
+    public function setNbAttachment($nbAttachment)
     {
-        $this->receptionDate = $receptionDate;
+        $this->nbAttachment = $nbAttachment;
     }
+
+    /**
+     * @return int
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * @param int $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+    }
+
 }
 

@@ -26,12 +26,7 @@ class Email
      * email of the sender
      * @var string
      *
-     * @ORM\Column(name="sender_email", type="string", nullable=false)
-     * @Assert\Type("string")
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     *     checkMX = true
-     * )
+     * @ORM\Column(name="sender_email", type="string")
      */
     private $senderEmail;
 
@@ -39,40 +34,33 @@ class Email
      * email of the recipient
      * @var string
      *
-     * @ORM\Column(name="recipient_email", type="string", nullable=false)
-     * @Assert\Type("string")
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.",
-     *     checkMX = true
-     * )
+     * @ORM\Column(name="recipient_email", type="string")
      */
     private $recipientEmail;
 
     /**
-     * object of the email
+     * subject of the email
      * @var string
      *
-     * @ORM\Column(name="object", type="string", nullable=false)
-     * @Assert\Type("string")
+     * @ORM\Column(name="subject", type="string")
      */
-    private $object;
+    private $subject;
 
     /**
      * body of the expedient
      * @var string
      *
-     * @ORM\Column(name="body", type="string", length=4000, nullable=false)
-     * @Assert\Type("string")
+     * @ORM\Column(name="body", type="string", length=4000)
      */
     private $body;
 
 
     /**
      * timestamp of reception
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(name="timestamp", type="integer", nullable=false)
-     * @Assert\Type("integer")
+     * @ORM\Column(name="timestamp", type="datetime")
+     * @Assert\Date
      */
     private $timestamp;
 
@@ -80,7 +68,7 @@ class Email
      * email of the sender
      * @var integer
      *
-     * @ORM\Column(name="nb_attachment", type="integer", nullable=false)
+     * @ORM\Column(name="nb_attachment", type="integer")
      * @Assert\Type("integer")
      */
     private $nbAttachment;
@@ -131,17 +119,17 @@ class Email
     /**
      * @return string
      */
-    public function getObject()
+    public function getSubject()
     {
-        return $this->object;
+        return $this->subject;
     }
 
     /**
-     * @param string $object
+     * @param string $subject
      */
-    public function setObject($object)
+    public function setSubject($subject)
     {
-        $this->object = $object;
+        $this->subject = $subject;
     }
 
     /**
@@ -177,7 +165,7 @@ class Email
     }
 
     /**
-     * @return int
+     * @return \DateTime
      */
     public function getTimestamp()
     {
@@ -185,12 +173,11 @@ class Email
     }
 
     /**
-     * @param int $timestamp
+     * @param \DateTime $timestamp
      */
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
     }
-
 }
 

@@ -14,10 +14,12 @@
     <tbody>
     {% if emails is not null and emails is defined%}
         {% for email in emails %}
-            <td>{{ email.senderEmail }}</td>
-            <td>{{ email.object}}</td>
-            <td>{{ email.timestamp|date('d/m/Y') }}</td>
-            <td>{{ email.nbAttachment }}</td>
+            <tr>
+                <td>{{ email.senderEmail }}</td>
+                <td>{{ email.subject}}</td>
+                <td>{{ email.timestamp|date('d/m/Y') }}</td>
+                <td>{{ email.nbAttachment }}</td>
+            </tr>
         {% endfor %}
     {% endif %}
     </tbody>

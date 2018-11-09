@@ -42,24 +42,35 @@ class DefaultController extends Controller
     {
         $postedEmail = json_decode($request->getContent(), true);
 
-        $alreadyRegistered = $this->em->getRepository('AppBundle:Email')->findOneByTimestamp($postedEmail['timestamp']);
+        $requiredKeyWithDefaultValue = [
+            'sender' => "none@none.none",
+            'recipient' =>"none@none.none",
+            "subject" => "no subject",
+            "body-html" => "<html><body>No body</body></html>",
+            "timestamp" => new \DateTime()];
 
-        if(!empty($alreadyRegistered)) return new JsonResponse(["message" => "Already registered"], "400");
+        foreach($requiredKeyWithDefaultValue as $item=>$value)
+        {
+            if(!array_key_exists($item,$postedEmail) || empty($postedEmail[$item]))
+            {
+                $postedEmail[$item] = $value;
+            }
+        }
 
-        if(empty($postedEmail['sender']) ||
-            empty($postedEmail['recipient']) ||
-            empty($postedEmail['attachment-count']) ||
-            empty($postedEmail['timestamp']) ) return new JsonResponse(["message" => "Required parameter missing"], "400");
-
-        if(empty($postedEmail['subject'])) $postedEmail['subject'] = "";
-        if(empty($postedEmail['body-html'])) $postedEmail['body-html'] = "";
+        if(!$postedEmail['timestamp'] instanceof \DateTime)
+        {
+            $date = new \DateTime();
+            $date->setTimestamp($postedEmail['timestamp']);
+            $postedEmail["timestamp"] = $date;
+        }
 
         $email = new Email();
         $email->setSenderEmail($postedEmail['sender']);
         $email->setRecipientEmail($postedEmail['recipient']);
-        $email->setObject($postedEmail['subject']);
+        $email->setSubject($postedEmail['subject']);
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
+
         $email->setTimestamp($postedEmail['timestamp']);
 
         $this->em->persist($email);

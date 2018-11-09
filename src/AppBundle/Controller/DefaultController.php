@@ -89,7 +89,7 @@ class DefaultController extends Controller
         $this->em->persist($email);
         $this->em->flush();
 
-        return new JsonResponse($email->getRequest(), "200");
+        return new JsonResponse($email->getPostRequest(), "200");
     }
 
 }

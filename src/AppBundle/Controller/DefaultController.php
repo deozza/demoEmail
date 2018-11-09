@@ -42,12 +42,12 @@ class DefaultController extends Controller
     {
         $postedEmail = $request->request->all();
 
-        if(strpos($request->headers->get('Content-Tyoe'), "multipart") !== false)
+
+        if(strpos($request->headers->get('content-type'), "multipart") === false)
         {
             return $this->emailWithoutAttachment($postedEmail, $request);
         }
-        else
-        {
+        else {
             return $this->emailWithAttachment($postedEmail, $request);
         }
     }
@@ -84,7 +84,7 @@ class DefaultController extends Controller
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
-        $email->setPostRequest($request->request->get('attachment-X'));
+        $email->setPostRequest($request->getContent());
 
         $this->em->persist($email);
         $this->em->flush();

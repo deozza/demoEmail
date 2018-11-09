@@ -42,6 +42,18 @@ class DefaultController extends Controller
     {
         $postedEmail = $request->request->all();
 
+
+        return $this->emailWithoutAttachment($postedEmail, $request);
+
+    }
+
+    private function emailWithAttachment($postedEmail, Request $request)
+    {
+        dump($request->files->get('fichier')->getPathname());die;
+    }
+
+    private function emailWithoutAttachment($postedEmail, Request $request)
+    {
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
             'recipient' =>"none@none.none",
@@ -72,13 +84,12 @@ class DefaultController extends Controller
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
-        $email->setJsonRequest($request->getContent());
+        $email->setRequest($request->request->all());
 
         $this->em->persist($email);
         $this->em->flush();
 
-        $response = new JsonResponse($email, "200");
-        return $response;
+        return new JsonResponse($email->getRequest(), "200");
     }
 
 }

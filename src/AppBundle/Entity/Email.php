@@ -75,9 +75,9 @@ class Email
      * json of the request
      * @var string
      *
-     * @ORM\Column(name="json_request", type="text")
+     * @ORM\Column(name="post_request", type="text")
      */
-    private $jsonRequest;
+    private $postRequest;
 
 
     /**
@@ -189,17 +189,17 @@ class Email
     /**
      * @return string
      */
-    public function getJsonRequest()
+    public function getpostRequest()
     {
-        return $this->jsonRequest;
+        return $this->postRequest;
     }
 
     /**
-     * @param string $jsonRequest
+     * @param string $postRequest
      */
-    public function setJsonRequest($jsonRequest)
+    public function setPostRequest($postRequest)
     {
-        $this->jsonRequest = $jsonRequest;
+        $this->postRequest = $postRequest;
     }
 
 

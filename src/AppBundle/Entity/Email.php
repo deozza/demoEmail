@@ -86,9 +86,9 @@ class Email
      */
     protected $attachments;
 
-    public function __construct($arrayCollection)
+    public function __construct()
     {
-        $this->arrayCollection = $arrayCollection;
+        $this->arrayCollection = new ArrayCollection();
     }
 
 

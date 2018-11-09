@@ -44,7 +44,15 @@ class DefaultController extends Controller
 
         $alreadyRegistered = $this->em->getRepository('AppBundle:Email')->findOneByTimestamp($postedEmail['timestamp']);
 
-        if(!empty($alreadyRegistered)) return new JsonResponse(["message" => "deja enregistré"], "400");
+        if(!empty($alreadyRegistered)) return new JsonResponse(["message" => "Already registered"], "400");
+
+        if(empty($postedEmail['sender']) ||
+            empty($postedEmail['recipient']) ||
+            empty($postedEmail['attachment-count']) ||
+            empty($postedEmail['timestamp']) ) return new JsonResponse(["message" => "Required parameter missing"], "400");
+
+        if(empty($postedEmail['subject'])) $postedEmail['subject'] = "";
+        if(empty($postedEmail['body-html'])) $postedEmail['body-html'] = "";
 
         $email = new Email();
         $email->setSenderEmail($postedEmail['sender']);

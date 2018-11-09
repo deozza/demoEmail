@@ -9,7 +9,8 @@
         <th scope="col">Objet</th>
         <th scope="col">Date d'envoi</th>
         <th scope="col">Pièce jointe</th>
-        <th scope="col">Request</th>
+        <th scope="col">Télécharger pièce jointe</th>
+        <th scope="col">Body</th>
     </tr>
     </thead>
     <tbody>
@@ -26,6 +27,7 @@
                     <a href="{{ path('dl_attachment', ['id' : attachment.id]) }}">Télécharger pièce jointe</a>
         {% endfor %}
                 </td>
+                <td>{{ email.body|raw }}</td>
             </tr>
         {% endfor %}
     {% endif %}

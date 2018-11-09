@@ -40,8 +40,7 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $postedEmail = json_decode($request->getContent(), true);
-
+        $postedEmail = $request->query->all();
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
             'recipient' =>"none@none.none",

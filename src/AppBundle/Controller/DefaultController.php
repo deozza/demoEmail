@@ -86,7 +86,7 @@ class DefaultController extends Controller
         $email->setTimestamp($postedEmail['timestamp']);
         $email->setPostRequest(var_export($request->files->all(), true));
 
-        dump($request->files);die;
+        print_r($request->files);die;
 
         $this->em->persist($email);
         $this->em->flush();

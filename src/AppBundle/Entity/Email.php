@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints As Assert;
 
 /**
  * Email
@@ -78,6 +78,18 @@ class Email
      * @ORM\Column(name="post_request", type="text")
      */
     private $postRequest;
+
+    /**
+     * User owning this token
+     * @ORM\OneToMany(targetEntity="Email", mappedBy="emailAttachment")
+     * @var Email
+     */
+    protected $attachments;
+
+    public function __construct($arrayCollection)
+    {
+        $this->arrayCollection = $arrayCollection;
+    }
 
 
     /**
@@ -202,6 +214,13 @@ class Email
         $this->postRequest = $postRequest;
     }
 
+    /**
+     * @return Email
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
 
 }
 

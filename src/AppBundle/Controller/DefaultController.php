@@ -37,6 +37,27 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/attachment{id}", name="dl_attachment")
+     */
+    public function getAttachmentAction($id)
+    {
+
+        $attachment = $this->em->getRepository('AppBundle:EmailAttachment')->find($id);
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        $mimetype = $finfo->buffer($attachment);
+        $fileName = $mimetype == 'image/png' ? 'logo.png' : 'logo.jpeg';
+        $headers = [
+            'Content-Type'     => $mimetype,
+            'Content-Disposition' => 'inline; filename="'.$fileName.'"'
+        ];
+
+        return new Response($attachment, 200, $headers);
+
+    }
+
+    /**
      * @Route("/email", name="email_registering", methods={"POST"})
      */
     public function postEmailAction(Request $request)

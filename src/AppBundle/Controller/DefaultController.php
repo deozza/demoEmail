@@ -47,7 +47,8 @@ class DefaultController extends Controller
             'recipient' =>"none@none.none",
             "subject" => "no subject",
             "body-html" => "<html><body>No body</body></html>",
-            "timestamp" => new \DateTime()];
+            "timestamp" => new \DateTime(),
+            "attachment-count" => 0];
 
         foreach($requiredKeyWithDefaultValue as $item=>$value)
         {

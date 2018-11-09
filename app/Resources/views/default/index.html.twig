@@ -20,7 +20,7 @@
                 <td>{{ email.senderEmail }}</td>
                 <td>{{ email.subject}}</td>
                 <td>{{ email.timestamp|date('d/m/Y H:i:s') }}</td>
-                <td>{{ email.nbAttachment }}</td>
+                <td>{{ email.nbAttachment }}, {{ email.attachment|length }}</td>
                 <td>
 
         {% for file in email.attachment %}

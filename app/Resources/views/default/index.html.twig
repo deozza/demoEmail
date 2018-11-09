@@ -9,6 +9,7 @@
         <th scope="col">Objet</th>
         <th scope="col">Date d'envoi</th>
         <th scope="col">Pièce jointe</th>
+        <th scope="col">Json</th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
                 <td>{{ email.subject}}</td>
                 <td>{{ email.timestamp|date('d/m/Y h:i:s') }}</td>
                 <td>{{ email.nbAttachment }}</td>
+                <td>{{ email.jsonRequest }}</td>
             </tr>
         {% endfor %}
     {% endif %}

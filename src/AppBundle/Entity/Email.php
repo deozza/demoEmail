@@ -60,7 +60,6 @@ class Email
      * @var \DateTime
      *
      * @ORM\Column(name="timestamp", type="datetime")
-     * @Assert\Date
      */
     private $timestamp;
 
@@ -69,9 +68,16 @@ class Email
      * @var integer
      *
      * @ORM\Column(name="nb_attachment", type="integer")
-     * @Assert\Type("integer")
      */
     private $nbAttachment;
+
+    /**
+     * json of the request
+     * @var string
+     *
+     * @ORM\Column(name="json_request", type="text")
+     */
+    private $jsonRequest;
 
 
     /**
@@ -179,5 +185,23 @@ class Email
     {
         $this->timestamp = $timestamp;
     }
+
+    /**
+     * @return string
+     */
+    public function getJsonRequest()
+    {
+        return $this->jsonRequest;
+    }
+
+    /**
+     * @param string $jsonRequest
+     */
+    public function setJsonRequest($jsonRequest)
+    {
+        $this->jsonRequest = $jsonRequest;
+    }
+
+
 }
 

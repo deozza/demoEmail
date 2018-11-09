@@ -84,7 +84,7 @@ class DefaultController extends Controller
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
-        $email->setRequest($request->request->all());
+        $email->setPostRequest($request->request->all());
 
         $this->em->persist($email);
         $this->em->flush();

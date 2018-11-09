@@ -42,14 +42,54 @@ class DefaultController extends Controller
     {
         $postedEmail = $request->request->all();
 
-
-        return $this->emailWithoutAttachment($postedEmail, $request);
-
+        if(strpos($request->headers->get('Content-Tyoe'), "multipart") !== false)
+        {
+            return $this->emailWithoutAttachment($postedEmail, $request);
+        }
+        else
+        {
+            return $this->emailWithAttachment($postedEmail, $request);
+        }
     }
 
     private function emailWithAttachment($postedEmail, Request $request)
     {
-        dump($request->files->get('fichier')->getPathname());die;
+        $requiredKeyWithDefaultValue = [
+            'from' => "none@none.none",
+            'recipient' =>"none@none.none",
+            "subject" => "no subject",
+            "body-html" => "<html><body>No body</body></html>",
+            "timestamp" => new \DateTime(),
+            "attachment-count" => 0];
+
+        foreach($requiredKeyWithDefaultValue as $item=>$value)
+        {
+            if(!array_key_exists($item,$postedEmail) || empty($postedEmail[$item]))
+            {
+                $postedEmail[$item] = $value;
+            }
+        }
+
+        if(!$postedEmail['timestamp'] instanceof \DateTime)
+        {
+            $date = new \DateTime();
+            $date->setTimestamp($postedEmail['timestamp']);
+            $postedEmail["timestamp"] = $date;
+        }
+
+        $email = new Email();
+        $email->setSenderEmail($postedEmail['from']);
+        $email->setRecipientEmail($postedEmail['recipient']);
+        $email->setSubject($postedEmail['subject']);
+        $email->setBody($postedEmail['body-html']);
+        $email->setNbAttachment($postedEmail['attachment-count']);
+        $email->setTimestamp($postedEmail['timestamp']);
+        $email->setPostRequest($request->request->get('attachment-X'));
+
+        $this->em->persist($email);
+        $this->em->flush();
+
+        return new JsonResponse($email->getPostRequest(), "200");
     }
 
     private function emailWithoutAttachment($postedEmail, Request $request)
@@ -84,7 +124,7 @@ class DefaultController extends Controller
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
-        $email->setPostRequest($request->request->get('attachment-X'));
+        $email->setPostRequest($request->getContent());
 
         $this->em->persist($email);
         $this->em->flush();

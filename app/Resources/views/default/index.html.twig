@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ email.senderEmail }}</td>
                 <td>{{ email.subject}}</td>
-                <td>{{ email.timestamp|date('d/m/Y') }}</td>
+                <td>{{ email.timestamp|date('d/m/Y h:i:s') }}</td>
                 <td>{{ email.nbAttachment }}</td>
             </tr>
         {% endfor %}

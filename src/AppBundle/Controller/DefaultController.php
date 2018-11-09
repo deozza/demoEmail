@@ -93,9 +93,17 @@ class DefaultController extends Controller
 
         foreach ($files as $file)
         {
+
+
+            //dump($file);
+            //dump(get_class_methods($file));
+            //dump($file->getClientOriginalName());die;
+            //dump($file->getPath());
+
+
             $binaryContent= file_get_contents($file->getPathname());
-            $emailAttachment = new EmailAttachment($email->getId(), $request->files->getPathname(), $binaryContent);
-            $this->em->persist($binaryContent);
+            $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
+            $this->em->persist($emailAttachment);
         }
 
         $this->em->flush();

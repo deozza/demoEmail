@@ -43,7 +43,7 @@ class DefaultController extends Controller
         $postedEmail = json_decode($request->getContent(), true);
 
         $requiredKeyWithDefaultValue = [
-            'sender' => "none@none.none",
+            'from' => "none@none.none",
             'recipient' =>"none@none.none",
             "subject" => "no subject",
             "body-html" => "<html><body>No body</body></html>",
@@ -66,7 +66,7 @@ class DefaultController extends Controller
         }
 
         $email = new Email();
-        $email->setSenderEmail($postedEmail['sender']);
+        $email->setSenderEmail($postedEmail['from']);
         $email->setRecipientEmail($postedEmail['recipient']);
         $email->setSubject($postedEmail['subject']);
         $email->setBody($postedEmail['body-html']);

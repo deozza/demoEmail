@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Email;
+use AppBundle\Entity\EmailAttachment;
 use AppBundle\Serializer\FormErrorSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -86,9 +87,17 @@ class DefaultController extends Controller
         $email->setTimestamp($postedEmail['timestamp']);
         $email->setPostRequest(var_export($request->files->all(), true));
 
-        print_r($request->files);die;
-
         $this->em->persist($email);
+
+        $files = $request->files->all();
+
+        foreach ($files as $file)
+        {
+            $binaryContent= file_get_contents($file->getPathname());
+            $emailAttachment = new EmailAttachment($email->getId(), $request->files->getPathname(), $binaryContent);
+            $this->em->persist($binaryContent);
+        }
+
         $this->em->flush();
 
         return new JsonResponse($email->getPostRequest(), "200");

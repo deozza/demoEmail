@@ -17,7 +17,7 @@
                         <a href="{{ path('dl_attachment', {'id' : attachment.id} ) }}">Télécharger {{ attachment.filename }}</a>
                     </div>
                     #}
-                        {{ attachment }}
+                        {{ attachment.id }}
 
                     {% endfor %}
                 {% endif %}

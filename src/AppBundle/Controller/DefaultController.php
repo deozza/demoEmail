@@ -45,20 +45,9 @@ class DefaultController extends Controller
     public function getEmailContentAction($id)
     {
 
-
-        var_dump("before email find");
-
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
 
-        var_dump("after email find");
-        var_dump($email->getId());
-        var_dump("before attachment find");
-
         $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);
-
-        var_dump("after attachment find");
-        var_dump($attachments);
-        die;
 
         return $this->render('default/email.html.twig', [
             'email' => $email,

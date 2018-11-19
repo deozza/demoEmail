@@ -131,11 +131,11 @@ class DefaultController extends Controller
 
         }
 
-        if($this->em->flush())
-        {
-            $this->logger->debug($emailAttachment->getAttachment());
-            $this->logger->debug($email->getAttachments());
-        }
+        $this->em->flush();
+
+        $this->logger->debug($emailAttachment->getAttachment());
+        $this->logger->debug($email->getAttachments());
+
 
         return new JsonResponse($email->getPostRequest(), "200");
     }

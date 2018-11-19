@@ -90,16 +90,53 @@ class DefaultController extends Controller
 
         $request .= file_get_contents("php://input");
 
+
+        $postedEmail = $request->request->all();
+
+
+        $requiredKeyWithDefaultValue = [
+            'from' => "none@none.none",
+            'recipient' =>"none@none.none",
+            "subject" => "no subject",
+            "body-html" => "<html><body>No body</body></html>",
+            "timestamp" => new \DateTime(),
+            "attachment-count" => 0];
+
+        foreach($requiredKeyWithDefaultValue as $item=>$value)
+        {
+            if(!array_key_exists($item,$postedEmail) || empty($postedEmail[$item]))
+            {
+                $postedEmail[$item] = $value;
+            }
+        }
+
+        if(!$postedEmail['timestamp'] instanceof \DateTime)
+        {
+            $date = new \DateTime();
+            $date->setTimestamp($postedEmail['timestamp']);
+            $postedEmail["timestamp"] = $date;
+        }
+
         $email = new Email();
+        $email->setSenderEmail($postedEmail['from']);
+        $email->setRecipientEmail($postedEmail['recipient']);
+        $email->setSubject($postedEmail['subject']);
+        $email->setBody($postedEmail['body-html']);
+        $email->setNbAttachment($postedEmail['attachment-count']);
+        $email->setTimestamp($postedEmail['timestamp']);
         $email->setPostRequest($request);
-        $email->setSenderEmail("pif@pif.com");
-        $email->setRecipientEmail("paf@paf.com");
-        $email->setTimestamp(new \DateTime('now'));
-        $email->setBody("test");
-        $email->setSubject("ouais");
-        $email->setNbAttachment(0);
 
         $this->em->persist($email);
+
+        $files = $request->files->all();
+
+        foreach ($files as $file)
+        {
+            $binaryContent= file_get_contents($file->getPathname());
+            $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
+            $this->em->persist($emailAttachment);
+        }
+
         $this->em->flush();
         die;
         /*

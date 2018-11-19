@@ -11,7 +11,7 @@
         <div class="card-footer">
             <div class="row">
                 {% if attachments is defined and attachments is not null %}
-                    {% dump attachments %}
+                    {{ attachments }}
                     {% for attachment in attachments %}
                     <div class="col">
                         <a href="{{ path('dl_attachment', {'id' : attachment.id} ) }}">Télécharger {{ attachment.filename }}</a>

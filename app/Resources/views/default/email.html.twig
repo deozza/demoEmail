@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="card">
+        <h4 class="card-header">{{ email.senderEmail }}</h4>
+        <div class="card-body">
+            <h5 class="card-title">{{ email.subject }}</h5>
+            <div> {{ email.body|raw }}</div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                {% for attachment in attachments %}
+                <div class="col">
+                    <a href="{{ path('dl_attachment', {'id' : attachment.id} ) }}">Télécharger {{ attachment.filename }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

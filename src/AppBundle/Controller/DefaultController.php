@@ -33,8 +33,25 @@ class DefaultController extends Controller
 
         $emails = $this->em->getRepository('AppBundle:Email')->findAll();
 
+
         return $this->render('default/index.html.twig', [
             'emails' => $emails,
+        ]);
+    }
+
+    /**
+     * @Route("/email/{id}", name="get_email_content")
+     */
+    public function getEmailContentAction($id)
+    {
+
+        $email = $this->em->getRepository('AppBundle:Email')->find($id);
+        $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);
+
+
+        return $this->render('default/email.html.twig', [
+            'email' => $email,
+            'attachments' => $attachments
         ]);
     }
 
@@ -116,26 +133,12 @@ class DefaultController extends Controller
 
         foreach ($files as $file)
         {
-
-
-            //dump($file);
-            //dump(get_class_methods($file));
-            //dump($file->getClientOriginalName());die;
-            //dump($file->getPath());
-
-
             $binaryContent= file_get_contents($file->getPathname());
             $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
             $this->em->persist($emailAttachment);
-
-
         }
 
         $this->em->flush();
-
-        $this->logger->debug($emailAttachment->getAttachment());
-        $this->logger->debug($email->getAttachments());
-
 
         return new JsonResponse($email->getPostRequest(), "200");
     }

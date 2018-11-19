@@ -128,12 +128,14 @@ class DefaultController extends Controller
             $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
             $this->em->persist($emailAttachment);
 
-            $this->logger->info("hey");
-
 
         }
 
-        $this->em->flush();
+        if($this->em->flush())
+        {
+            $this->logger->debug($emailAttachment->getAttachment());
+            $this->logger->debug($email->getAttachments());
+        }
 
         return new JsonResponse($email->getPostRequest(), "200");
     }

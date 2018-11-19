@@ -10,7 +10,13 @@
         </div>
         <div class="card-footer">
             <div class="row">
- c'est le footer
+                {% if attachments is defined and attachments is not null %}
+                {% for attachment in attachments %}
+                <div class="col">
+                    <a href="{{ path('dl_attachment', {'id' : attachment.id} ) }}">Télécharger {{ attachment.filename }}</a>
+                </div>
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

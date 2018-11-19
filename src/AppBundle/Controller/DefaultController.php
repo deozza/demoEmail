@@ -125,6 +125,11 @@ class DefaultController extends Controller
             $binaryContent= file_get_contents($file->getPathname());
             $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
             $this->em->persist($emailAttachment);
+
+            $logger = \Psr\Log\LoggerInterface::class;
+            $logger->info("hey");
+
+
         }
 
         $this->em->flush();

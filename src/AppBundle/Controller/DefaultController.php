@@ -48,6 +48,8 @@ class DefaultController extends Controller
         $email = $this->em->getRepository('AppBundle:Email')->find($id);
         $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);
 
+        dump($email, $attachments);die;
+
 
         return $this->render('default/email.html.twig', [
             'email' => $email,

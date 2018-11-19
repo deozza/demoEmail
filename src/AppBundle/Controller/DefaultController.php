@@ -6,6 +6,7 @@ use AppBundle\Entity\Email;
 use AppBundle\Entity\EmailAttachment;
 use AppBundle\Serializer\FormErrorSerializer;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -74,7 +75,7 @@ class DefaultController extends Controller
         }
     }
 
-    private function emailWithAttachment($postedEmail, Request $request)
+    private function emailWithAttachment($postedEmail, Request $request, LoggerInterface $logger)
     {
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
@@ -126,7 +127,6 @@ class DefaultController extends Controller
             $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
             $this->em->persist($emailAttachment);
 
-            $logger = \Psr\Log\LoggerInterface::class;
             $logger->info("hey");
 
 

@@ -45,7 +45,6 @@ class DefaultController extends Controller
     public function getEmailContentAction($id)
     {
 
-        var_dump("coucou le dump");die;
 
 
         $email = $this->em->getRepository('AppBundle:Email')->find($id);
@@ -54,6 +53,7 @@ class DefaultController extends Controller
 
         $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);
 
+        var_dump($email, $attachments);die;
 
 
         return $this->render('default/email.html.twig', [

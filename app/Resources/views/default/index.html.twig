@@ -20,10 +20,10 @@
                 <td>{{ email.senderEmail }}</td>
                 <td>{{ email.subject}}</td>
                 <td>{{ email.timestamp|date('d/m/Y H:i:s') }}</td>
-                <td>{{ email.nbAttachment }}</td>
+                <td>{{ email.nbAttachment }}, {{ email.attachments|length}}</td>
                 <td>
 
-        {% for file in email.attachment %}
+        {% for file in email.attachments %}
                     <a href="{{ path('dl_attachment', {'id' : file} ) }}">Télécharger pièce jointe</a>
         {% endfor %}
                 </td>

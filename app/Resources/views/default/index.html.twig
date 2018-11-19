@@ -21,13 +21,7 @@
                 <td>{{ email.subject}}</td>
                 <td>{{ email.timestamp|date('d/m/Y H:i:s') }}</td>
                 <td>{{ email.nbAttachment }}</td>
-                <td>
-
-        {% for file in email.attachments %}
-                    <a href="{{ path('dl_attachment', {'id' : file} ) }}">Télécharger pièce jointe</a>
-        {% endfor %}
-                </td>
-                <td>{{ email.body|raw }}</td>
+                <td><a href="{{ path('get_email_content', {'id' : email.id} ) }}"><button class="btn btn-primary">Lire</button></a></td>
             </tr>
         {% endfor %}
     {% endif %}

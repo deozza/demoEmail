@@ -51,7 +51,7 @@ class DefaultController extends Controller
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
 
         var_dump("after email find");
-        var_dump($email->id());
+        var_dump($email->getId());
         var_dump("before attachment find");
 
         $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);

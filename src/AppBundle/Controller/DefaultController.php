@@ -18,10 +18,11 @@ class DefaultController extends Controller
     private $em;
     private $formErrorSerializer;
 
-    public function __construct(EntityManagerInterface $entityManager, FormErrorSerializer $formErrorSerializer)
+    public function __construct(EntityManagerInterface $entityManager, FormErrorSerializer $formErrorSerializer, LoggerInterface $logger)
     {
         $this->em = $entityManager;
         $this->formErrorSerializer = $formErrorSerializer;
+        $this->logger = $logger;
     }
 
     /**
@@ -75,7 +76,7 @@ class DefaultController extends Controller
         }
     }
 
-    private function emailWithAttachment($postedEmail, Request $request, LoggerInterface $logger)
+    private function emailWithAttachment($postedEmail, Request $request)
     {
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
@@ -127,7 +128,7 @@ class DefaultController extends Controller
             $emailAttachment = new EmailAttachment($email->getId(), $file->getClientOriginalName(), $binaryContent);
             $this->em->persist($emailAttachment);
 
-            $logger->info("hey");
+            $this->logger->info("hey");
 
 
         }

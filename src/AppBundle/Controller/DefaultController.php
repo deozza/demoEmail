@@ -47,7 +47,7 @@ class DefaultController extends Controller
 
 
 
-        $email = $this->em->getRepository('AppBundle:Email')->find($id);
+        $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
 
 
 

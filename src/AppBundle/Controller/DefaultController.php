@@ -32,7 +32,6 @@ class DefaultController extends Controller
     {
 
         $emails = $this->em->getRepository('AppBundle:Email')->findAll();
-        $attachments = $this->em->getRepository('AppBundle:EmailAttachment')->findAll();
 
         return $this->render('default/index.html.twig', [
             'emails' => $emails,
@@ -47,14 +46,10 @@ class DefaultController extends Controller
 
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
 
-        $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
-
-
-        var_dump($email->getPostRequest());
+        //$attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
 
         return $this->render('default/email.html.twig', [
-            'email' => $email,
-            "attachments" => $attachments
+            'email' => $email
         ]);
     }
 
@@ -84,8 +79,31 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $postedEmail = $request->request->all();
+        $headers = getallheaders();
 
+        $request = "";
+
+        foreach($headers as $name=>$value)
+        {
+            $request .= $name ." => ".$value. "\n";
+        }
+
+        $request .= file_get_contents("php://input");
+
+        $email = new Email();
+        $email->setPostRequest($request);
+        $email->setSenderEmail("pif@pif.com");
+        $email->setRecipientEmail("paf@paf.com");
+        $email->setTimestamp(new \DateTime('now'));
+        $email->setBody("test");
+        $email->setSubject("ouais");
+        $email->setNbAttachment(0);
+
+        $this->em->persist($email);
+        $this->em->flush();
+        die;
+        /*
+        $postedEmail = $request->request->all();
 
         if(strpos($request->headers->get('content-type'), "multipart") === false)
         {
@@ -94,6 +112,8 @@ class DefaultController extends Controller
         else {
             return $this->emailWithAttachment($postedEmail, $request);
         }
+        */
+
     }
 
     private function emailWithAttachment($postedEmail, Request $request)

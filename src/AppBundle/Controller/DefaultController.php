@@ -32,7 +32,7 @@ class DefaultController extends Controller
     {
 
         $emails = $this->em->getRepository('AppBundle:Email')->findAll();
-
+        $attachments = $this->em->getRepository('AppBundle:EmailAttachment')->findAll();
 
         return $this->render('default/index.html.twig', [
             'emails' => $emails,
@@ -50,7 +50,7 @@ class DefaultController extends Controller
         $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
 
 
-        var_dump($attachments);
+        var_dump($email->getPostRequest());
 
         return $this->render('default/email.html.twig', [
             'email' => $email,

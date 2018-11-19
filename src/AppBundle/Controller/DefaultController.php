@@ -45,9 +45,11 @@ class DefaultController extends Controller
     public function getEmailContentAction($id)
     {
 
+        dump("coucou le dump");die;
+
+
         $email = $this->em->getRepository('AppBundle:Email')->find($id);
 
-        dump($email);die;
 
 
         $attachments = $this->em->getRepository('AppBundle:EmailAttachement')->findByEmail($id);

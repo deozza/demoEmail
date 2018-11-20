@@ -81,14 +81,14 @@ class Email
 
     /**
      * User owning this token
-     * @ORM\OneToMany(targetEntity="Email", mappedBy="emailAttachment")
+     * @ORM\OneToMany(targetEntity="EmailAttachment", mappedBy="email", fetch="EAGER")
      * @var Email
      */
     protected $attachments;
 
     public function __construct()
     {
-        $this->arrayCollection = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
     }
 
 

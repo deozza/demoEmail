@@ -45,7 +45,8 @@ class EmailAttachment
 
     /**
      * User owning this token
-     * @ORM\ManyToOne(targetEntity="Email")
+     * @ORM\ManyToOne(targetEntity="Email", inversedBy="attachments")
+     * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
      * @var Email
      */
     protected $email;

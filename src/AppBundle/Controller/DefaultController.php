@@ -63,7 +63,7 @@ class DefaultController extends Controller
         $attachment = $this->em->getRepository('AppBundle:EmailAttachment')->find($id);
 
         $response = new Response(stream_get_contents($attachment->getAttachment()), 200, [
-            'Content-type'=>'application/octet-stream',
+            'Content-type'=>'text/plain',
             'Content-Length' => fstat($attachment->getAttachment())['size'],
             'Content-Disposition'=> 'attachment; filename="'.$attachment->getFilename().'"'
         ]);

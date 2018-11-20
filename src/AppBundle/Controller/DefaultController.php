@@ -48,6 +48,9 @@ class DefaultController extends Controller
 
         $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
 
+        $this->logger->info(var_export($attachments, true));
+        $this->logger->info(var_export($email, true));
+
         return $this->render('default/email.html.twig', [
             'email' => $email,
             'attachments' => $attachments
@@ -87,8 +90,7 @@ class DefaultController extends Controller
             'recipient' =>"none@none.none",
             "subject" => "no subject",
             "body-html" => "<html><body>No body</body></html>",
-            "timestamp" => new \DateTime(),
-            "attachment-count" => 0];
+            "timestamp" => new \DateTime()];
 
         foreach($requiredKeyWithDefaultValue as $item=>$value)
         {
@@ -110,7 +112,6 @@ class DefaultController extends Controller
         $email->setRecipientEmail($postedEmail['recipient']);
         $email->setSubject($postedEmail['subject']);
         $email->setBody($postedEmail['body-html']);
-        $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
         $email->setPostRequest($requestContent);
 

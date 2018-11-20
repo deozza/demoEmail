@@ -64,14 +64,6 @@ class Email
     private $timestamp;
 
     /**
-     * email of the sender
-     * @var integer
-     *
-     * @ORM\Column(name="nb_attachment", type="integer")
-     */
-    private $nbAttachment;
-
-    /**
      * json of the request
      * @var string
      *
@@ -81,7 +73,7 @@ class Email
 
     /**
      * User owning this token
-     * @ORM\OneToMany(targetEntity="EmailAttachment", mappedBy="email", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="EmailAttachment", mappedBy="email")
      * @var Email
      */
     protected $attachments;
@@ -164,22 +156,6 @@ class Email
     public function setBody($body)
     {
         $this->body = $body;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbAttachment()
-    {
-        return $this->nbAttachment;
-    }
-
-    /**
-     * @param int $nbAttachment
-     */
-    public function setNbAttachment($nbAttachment)
-    {
-        $this->nbAttachment = $nbAttachment;
     }
 
     /**

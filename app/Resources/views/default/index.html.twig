@@ -8,7 +8,7 @@
         <th scope="col">Expéditeur</th>
         <th scope="col">Objet</th>
         <th scope="col">Date d'envoi</th>
-        <th scope="col">Pièce jointe</th>
+        <th scope="col">Nombre de pièce jointe</th>
         <th scope="col">Lire</th>
     </tr>
     </thead>
@@ -19,7 +19,7 @@
                 <td>{{ email.senderEmail }}</td>
                 <td>{{ email.subject}}</td>
                 <td>{{ email.timestamp|date('d/m/Y H:i:s') }}</td>
-                <td>{{ email.nbAttachment }}</td>
+                <td>{{ email.attachments|length }}</td>
                 <td><a href="{{ path('get_email_content', {'id' : email.id} ) }}"><button class="btn btn-primary">Lire</button></a></td>
             </tr>
         {% endfor %}

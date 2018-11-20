@@ -86,8 +86,8 @@ class DefaultController extends Controller
             'recipient' =>"none@none.none",
             "subject" => "no subject",
             "body-html" => "<html><body>No body</body></html>",
-            "timestamp" => new \DateTime(),
-            "attachment-count" => 0];
+            "timestamp" => new \DateTime()
+        ];
 
         foreach($requiredKeyWithDefaultValue as $item=>$value)
         {
@@ -109,7 +109,6 @@ class DefaultController extends Controller
         $email->setRecipientEmail($postedEmail['recipient']);
         $email->setSubject($postedEmail['subject']);
         $email->setBody($postedEmail['body-html']);
-        $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
         $email->setPostRequest($requestContent);
 

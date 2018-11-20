@@ -43,20 +43,11 @@ class DefaultController extends Controller
      */
     public function getEmailContentAction($id)
     {
-
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
-        $email->getAttachments()->clear();
-
         $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
 
-        foreach ($attachments as $attachment)
-        {
-            $attachment->setEmail(null);
-        }
-
-        //$this->logger->info(var_export($attachments, true));
-        $this->logger->info(var_export($email, true));
-
+        $this->logger->debug(serialize($attachments));
+        $this->logger->debug(serialize($email));
 
         return $this->render('default/email.html.twig', [
             'email' => $email,
@@ -86,7 +77,7 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $this->logger->debug('start of saving', true);
+        $this->logger->debug('start of saving');
         $requestContent = file_get_contents("php://input");
         $postedEmail = $request->request->all();
 
@@ -124,26 +115,26 @@ class DefaultController extends Controller
 
         $this->em->persist($email);
         $this->em->flush();
-        $this->logger->debug('email saved', true);
+        $this->logger->debug($email->getId());
 
         $files = $request->files->all();
 
-        if(empty($files)) return new JsonResponse($email->getpostRequest(), 200);
+        if(empty($files)) return new JsonResponse('Email saved without attachment', 200);
 
         foreach ($files as $file)
         {
-            $this->logger->debug('start of saving an attachment', true);
+            $this->logger->debug($file);
 
             $emailAttachment = new EmailAttachment($email, $file);
 
             $this->em->persist($emailAttachment);
-            $this->logger->debug('attachment saved', true);
+            $this->logger->debug($emailAttachment->getFilename());
 
         }
 
         $this->em->flush();
-        $this->logger->debug('attachments saved', true);
+        $this->logger->debug('attachments saved');
 
-        return new JsonResponse($email->getpostRequest(), 200);
+        return new JsonResponse('Email saved with attachment', 200);
     }
 }

@@ -79,16 +79,8 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $headers = apache_request_headers();
 
-        $request = "";
-
-        foreach($headers as $name=>$value)
-        {
-            $request .= $name ." => ".$value. "\n";
-        }
-
-        $request .= file_get_contents("php://input");
+        $requestContent = file_get_contents("php://input");
 
 
         $postedEmail = $request->request->all();
@@ -124,7 +116,7 @@ class DefaultController extends Controller
         $email->setBody($postedEmail['body-html']);
         $email->setNbAttachment($postedEmail['attachment-count']);
         $email->setTimestamp($postedEmail['timestamp']);
-        $email->setPostRequest($request);
+        $email->setPostRequest($requestContent);
 
         $this->em->persist($email);
 

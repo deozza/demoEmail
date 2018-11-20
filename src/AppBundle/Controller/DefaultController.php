@@ -79,7 +79,7 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $headers = getallheaders();
+        $headers = apache_request_headers();
 
         $request = "";
 

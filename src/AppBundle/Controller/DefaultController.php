@@ -115,7 +115,7 @@ class DefaultController extends Controller
 
         $this->em->persist($email);
         $this->em->flush();
-        $this->logger->debug(serialize($email));
+        $this->logger->debug($email->getId());
 
         $files = $request->files->all();
 
@@ -128,11 +128,12 @@ class DefaultController extends Controller
             $emailAttachment = new EmailAttachment($email, $file);
 
             $this->em->persist($emailAttachment);
-            $this->logger->debug(serialize($emailAttachment)));
+            $this->logger->debug($emailAttachment->getFilename());
 
         }
 
         $this->em->flush();
+        $this->logger->debug('attachments saved');
 
         return new JsonResponse('Email saved with attachment', 200);
     }

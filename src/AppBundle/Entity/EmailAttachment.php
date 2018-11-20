@@ -52,7 +52,8 @@ class EmailAttachment
 
     public function __construct(Email $email, UploadedFile $file)
     {
-        if($file->getError() != UPLOAD_ERR_OK)
+
+        if($file->getError() == UPLOAD_ERR_OK)
         {
             $this->setAttachment(file_get_contents($file->getPathname()));
         }

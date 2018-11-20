@@ -50,7 +50,7 @@ class DefaultController extends Controller
 
         return $this->render('default/email.html.twig', [
             'email' => $email,
-            'attachment' => $attachments
+            'attachments' => $attachments
         ]);
     }
 
@@ -62,17 +62,13 @@ class DefaultController extends Controller
 
         $attachment = $this->em->getRepository('AppBundle:EmailAttachment')->find($id);
 
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $response = new Response(stream_get_contents($attachment->getAttachment()), 200, [
+            'Content-type'=>'application/octet-stream',
+            'Content-Length' => fstat($attachment->getAttachment())['size'],
+            'Content-Disposition'=> 'attachment; filename="'.$attachment->getFilename().'"'
+        ]);
 
-        $mimetype = $finfo->buffer($attachment);
-        $fileName = $mimetype == 'image/png' ? 'logo.png' : 'logo.jpeg';
-        $headers = [
-            'Content-Type'     => $mimetype,
-            'Content-Disposition' => 'inline; filename="'.$fileName.'"'
-        ];
-
-        return new Response($attachment, 200, $headers);
-
+        return $response;
     }
 
     /**
@@ -123,10 +119,13 @@ class DefaultController extends Controller
 
         $files = $request->files->all();
 
+        if(empty($files)) return new JsonResponse($email->getpostRequest(), 200);
+
+
         foreach ($files as $file)
         {
-            $binaryContent= file_get_contents($file->getPathname());
-            $emailAttachment = new EmailAttachment($email, $file->getClientOriginalName(), $binaryContent);
+            $stream = fopen($file->getPathname(), 'rb');
+            $emailAttachment = new EmailAttachment($email, $file->getClientOriginalName(), stream_get_contents($stream));
             $this->em->persist($emailAttachment);
         }
 

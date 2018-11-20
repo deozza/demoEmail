@@ -24,7 +24,7 @@ class EmailAttachment
     /**
      * attachment
      *
-     * @ORM\Column(name="attachment", type="blob")
+     * @ORM\Column(name="attachment", type="blob", nullable=true)
      */
     private $attachment;
 

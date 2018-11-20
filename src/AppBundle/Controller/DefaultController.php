@@ -46,7 +46,7 @@ class DefaultController extends Controller
 
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
         $email->getAttachments()->clear();
-        
+
         $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
 
         foreach ($attachments as $attachment)
@@ -54,7 +54,7 @@ class DefaultController extends Controller
             $attachment->setEmail(null);
         }
 
-        $this->logger->info(var_export($attachments, true));
+        //$this->logger->info(var_export($attachments, true));
         $this->logger->info(var_export($email, true));
 
 

@@ -86,11 +86,9 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-
+        $this->logger->debug('start of saving', true);
         $requestContent = file_get_contents("php://input");
-
         $postedEmail = $request->request->all();
-
 
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
@@ -126,20 +124,25 @@ class DefaultController extends Controller
 
         $this->em->persist($email);
         $this->em->flush();
+        $this->logger->debug('email saved', true);
 
         $files = $request->files->all();
 
         if(empty($files)) return new JsonResponse($email->getpostRequest(), 200);
 
-
         foreach ($files as $file)
         {
+            $this->logger->debug('start of saving an attachment', true);
+
             $emailAttachment = new EmailAttachment($email, $file);
 
             $this->em->persist($emailAttachment);
+            $this->logger->debug('attachment saved', true);
+
         }
 
         $this->em->flush();
+        $this->logger->debug('attachments savec', true);
 
         return new JsonResponse($email->getpostRequest(), 200);
     }

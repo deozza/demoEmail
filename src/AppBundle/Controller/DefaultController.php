@@ -54,10 +54,6 @@ class DefaultController extends Controller
             $attachment->setEmail(null);
         }
 
-        //$this->logger->info(var_export($attachments, true));
-        $this->logger->info(var_export($email, true));
-
-
         return $this->render('default/email.html.twig', [
             'email' => $email,
             'attachments' => $attachments
@@ -86,7 +82,6 @@ class DefaultController extends Controller
      */
     public function postEmailAction(Request $request)
     {
-        $this->logger->debug('start of saving', true);
         $requestContent = file_get_contents("php://input");
         $postedEmail = $request->request->all();
 
@@ -124,7 +119,6 @@ class DefaultController extends Controller
 
         $this->em->persist($email);
         $this->em->flush();
-        $this->logger->debug('email saved', true);
 
         $files = $request->files->all();
 
@@ -132,17 +126,12 @@ class DefaultController extends Controller
 
         foreach ($files as $file)
         {
-            $this->logger->debug('start of saving an attachment', true);
-
             $emailAttachment = new EmailAttachment($email, $file);
 
             $this->em->persist($emailAttachment);
-            $this->logger->debug('attachment saved', true);
-
         }
 
         $this->em->flush();
-        $this->logger->debug('attachments savec', true);
 
         return new JsonResponse($email->getpostRequest(), 200);
     }

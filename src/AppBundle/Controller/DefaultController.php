@@ -80,7 +80,7 @@ class DefaultController extends Controller
     public function postEmailAction(Request $request)
     {
 
-        $requestContent = file_get_contents("php://input");
+        $requestContent = $request->getContent();
 
 
         $postedEmail = $request->request->all();

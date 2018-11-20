@@ -12,7 +12,25 @@
                 {% if attachments is defined and attachments is not null %}
                     {% for attachment in attachments %}
                         <div class="col">
-                            <a href="{{ path('dl_attachment', {'id' : attachment.id}) }}">Télécharger {{ attachment.filename }}</a>
+                            {% if attachment.errorKind != constant('UPLOAD_ERR_OK') %}
+                                {% if attachment.errorKind == constant('UPLOAD_ERR_INI_SIZE')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_INI_SIZE</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_FORM_SIZE')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_FORM_SIZE</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_PARTIAL')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_PARTIAL</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_NO_FILE')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_NO_FILE</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_NO_TMP_DIR')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_NO_TMP_DIR</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_CANT_WRITE')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_CANT_WRITE</p>
+                                {% elseif attachment.errorKind == constant('UPLOAD_ERR_EXTENSION')  %}
+                                    <p>{{ attachment.filename }} : UPLOAD_ERR_EXTENSION</p>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('dl_attachment', {'id' : attachment.id}) }}">Télécharger {{ attachment.filename }}</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 {% endif %}

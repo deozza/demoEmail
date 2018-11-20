@@ -124,9 +124,7 @@ class DefaultController extends Controller
 
         foreach ($files as $file)
         {
-            //$stream = fopen($file->getPathname(), 'rb');
-            //$emailAttachment = new EmailAttachment($email, $file->getClientOriginalName(), stream_get_contents($stream));
-            $emailAttachment = new EmailAttachment($email, $file->getClientOriginalName(), var_export($file ,true));
+            $emailAttachment = new EmailAttachment($email, $file);
 
             $this->em->persist($emailAttachment);
         }

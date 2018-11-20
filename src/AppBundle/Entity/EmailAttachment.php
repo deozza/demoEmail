@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Email
  *
@@ -36,17 +36,30 @@ class EmailAttachment
     private $filename;
 
     /**
+     * error number
+     *
+     * @ORM\Column(name="error_kind", type="integer")
+     */
+    private $errorKind;
+
+
+    /**
      * User owning this token
      * @ORM\ManyToOne(targetEntity="Email")
      * @var Email
      */
     protected $email;
 
-    public function __construct($email, $filename, $attachment)
+    public function __construct(Email $email, UploadedFile $file)
     {
-        $this->email = $email;
-        $this->filename = $filename;
-        $this->attachment = $attachment;
+        if($file->getError() != UPLOAD_ERR_OK)
+        {
+            $this->setAttachment(file_get_contents($file->getPathname()));
+        }
+        $this->setErrorKind($file->getError());
+
+        $this->setEmail($email);
+        $this->setFilename($file->getClientOriginalName());
     }
 
 
@@ -107,6 +120,23 @@ class EmailAttachment
     {
         $this->filename = $filename;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorKind()
+    {
+        return $this->errorKind;
+    }
+
+    /**
+     * @param mixed $errorKind
+     */
+    public function setErrorKind($errorKind)
+    {
+        $this->errorKind = $errorKind;
+    }
+
 
 
 }

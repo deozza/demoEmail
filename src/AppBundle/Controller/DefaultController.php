@@ -45,7 +45,8 @@ class DefaultController extends Controller
     {
 
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
-
+        $email->getAttachments()->clear();
+        
         $attachments = $this->em->getRepository(EmailAttachment::class)->findByEmail($id);
         $this->logger->info(var_export($attachments, true));
         $this->logger->info(var_export($email, true));
@@ -135,17 +136,5 @@ class DefaultController extends Controller
         $this->em->flush();
 
         return new JsonResponse($email->getpostRequest(), 200);
-        /*
-        $postedEmail = $request->request->all();
-
-        if(strpos($request->headers->get('content-type'), "multipart") === false)
-        {
-            return $this->emailWithoutAttachment($postedEmail, $request);
-        }
-        else {
-            return $this->emailWithAttachment($postedEmail, $request);
-        }
-        */
-
     }
 }

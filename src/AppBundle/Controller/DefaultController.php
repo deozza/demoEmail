@@ -129,6 +129,7 @@ class DefaultController extends Controller
 
             $this->em->persist($emailAttachment);
             $this->logger->debug($emailAttachment->getFilename());
+            $this->logger->debug(serialize($emailAttachment));
 
         }
 

@@ -5,7 +5,7 @@
         <h4 class="card-header">{{ email.senderEmail }}</h4>
         <div class="card-body">
             <h5 class="card-title">{{ email.subject }}</h5>
-            <div>{{ email.body }}</div>
+            <div>{{ email.body|raw }}</div>
         </div>
         <div class="card-footer">
             <div class="row">

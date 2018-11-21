@@ -26,7 +26,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="homepage", methods={"GET"})
      */
     public function indexAction()
     {
@@ -39,7 +39,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/email/{id}", name="get_email_content")
+     * @Route("/email/{id}", name="get_email_content", methods={"GET"})
      */
     public function getEmailContentAction($id)
     {
@@ -56,7 +56,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/attachment{id}", name="dl_attachment")
+     * @Route("/attachment{id}", name="dl_attachment", methods={"GET"})
      */
     public function getAttachmentAction($id)
     {

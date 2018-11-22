@@ -47,7 +47,7 @@ class DefaultControllerTest extends WebTestCase
             "body-html" => "<p>Hi I'm the body</p>"
         ];
         $fileLightPj = new UploadedFile(
-            __DIR__.'/../../../var/img_testing/light.png',
+            __DIR__ . '/../../../web/img_testing/light.png',
             "light.png",
             "image/png"
         );
@@ -72,7 +72,7 @@ class DefaultControllerTest extends WebTestCase
         ];
 
         $fileHeavyPj = new UploadedFile(
-            __DIR__.'/../../../var/img_testing/heavy.jpg',
+            __DIR__.'/../../../web/img_testing/heavy.jpg',
             "heavy.jpg",
             "image/jpg"
         );
@@ -98,12 +98,12 @@ class DefaultControllerTest extends WebTestCase
         ];
 
         $fileHeavyPj = new UploadedFile(
-            __DIR__.'/../../../var/img_testing/heavy.jpg',
+            __DIR__.'/../../../web/img_testing/heavy.jpg',
             "heavy.jpg",
             "image/jpg"
         );
         $fileLightPj = new UploadedFile(
-            __DIR__.'/../../../var/img_testing/light.png',
+            __DIR__.'/../../../web/img_testing/light.png',
             "light.png",
             "image/png"
         );

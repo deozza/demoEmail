@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * Class DefaultControllerTest
  * @package Tests\AppBundle\Controller
  *
- * @Group legacy
+ * @group legacy
  */
 class DefaultControllerTest extends WebTestCase
 {

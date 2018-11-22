@@ -5,6 +5,13 @@ namespace Tests\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+
+/**
+ * Class DefaultControllerTest
+ * @package Tests\AppBundle\Controller
+ *
+ * @Group legacy
+ */
 class DefaultControllerTest extends WebTestCase
 {
     public function getAllEmail()

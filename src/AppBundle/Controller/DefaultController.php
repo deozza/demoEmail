@@ -137,4 +137,13 @@ class DefaultController extends Controller
 
         return new JsonResponse('Email saved with attachment', 200);
     }
+
+    /**
+     * @Route("/email/store", name="email_store", methods={"POST"})
+     */
+    public function storeEmailAction(Request $request)
+    {
+        $this->logger->info($request);
+        die;
+    }
 }

@@ -111,7 +111,8 @@ class DefaultController extends Controller
     public function storeEmailAction(Request $request)
     {
         $postedEmail = $request->request->all();
-        $this->logger->debug(base64_encode(json_encode($postedEmail)));
+        $postedRequest = base64_encode(json_encode($postedEmail));
+        $this->logger->debug($postedRequest);
         $requiredKeyWithDefaultValue = [
             'from' => "none@none.none",
             'recipient' =>"none@none.none",
@@ -140,7 +141,7 @@ class DefaultController extends Controller
         }
 
         $email = new Email();
-        $email->setPostRequest(base64_encode(json_encode($postedEmail)));
+        $email->setPostRequest($postedRequest);
         $email->setBody($postedEmail['body-html']);
         $email->setRecipientEmail($postedEmail['recipient']);
         $email->setSenderEmail($postedEmail['from']);
@@ -150,7 +151,7 @@ class DefaultController extends Controller
         $this->em->persist($email);
         $this->em->flush();
 
-        $this->logger->debug($email);
+        $this->logger->debug(serialize($email));
 
         if(!empty($postedEmail['attachments']))
         {
@@ -168,14 +169,14 @@ class DefaultController extends Controller
             foreach($attachments as $attachment)
             {
                 $dlFileUrl= $attachment->url;
-                $this->logger->debug($dlFileUrl);
+                $this->logger->debug(serialize($dlFileUrl));
 
                 $file = $client->request("GET", $dlFileUrl);
 
                 $emailAttachment = new EmailAttachment($email, $file);
                 $this->em->persist($emailAttachment);
 
-                $this->logger->debug($emailAttachment);
+                $this->logger->debug(serialize($emailAttachment));
 
             }
 

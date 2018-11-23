@@ -39,40 +39,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/email/{id}", name="get_email_content", methods={"GET"})
-     */
-    public function getEmailContentAction($id)
-    {
-        $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
-        $attachments = $email->getAttachments();
-
-        $this->logger->debug(serialize($attachments));
-        $this->logger->debug(serialize($email));
-
-        return $this->render('default/email.html.twig', [
-            'email' => $email,
-            'attachments' => $attachments
-        ]);
-    }
-
-    /**
-     * @Route("/attachment{id}", name="dl_attachment", methods={"GET"})
-     */
-    public function getAttachmentAction($id)
-    {
-
-        $attachment = $this->em->getRepository('AppBundle:EmailAttachment')->find($id);
-
-        $response = new Response(stream_get_contents($attachment->getAttachment()), 200, [
-            'Content-type'=>'text/plain',
-            'Content-Length' => fstat($attachment->getAttachment())['size'],
-            'Content-Disposition'=> 'attachment; filename="'.$attachment->getFilename().'"'
-        ]);
-
-        return $response;
-    }
-
-    /**
      * @Route("/email", name="email_registering", methods={"POST"})
      */
     public function postEmailAction(Request $request)
@@ -146,4 +112,40 @@ class DefaultController extends Controller
         $this->logger->info($request);
         die;
     }
+
+    /**
+     * @Route("/email/{id}", name="get_email_content", methods={"GET"})
+     */
+    public function getEmailContentAction($id)
+    {
+        $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
+        $attachments = $email->getAttachments();
+
+        $this->logger->debug(serialize($attachments));
+        $this->logger->debug(serialize($email));
+
+        return $this->render('default/email.html.twig', [
+            'email' => $email,
+            'attachments' => $attachments
+        ]);
+    }
+
+    /**
+     * @Route("/attachment{id}", name="dl_attachment", methods={"GET"})
+     */
+    public function getAttachmentAction($id)
+    {
+
+        $attachment = $this->em->getRepository('AppBundle:EmailAttachment')->find($id);
+
+        $response = new Response(stream_get_contents($attachment->getAttachment()), 200, [
+            'Content-type'=>'text/plain',
+            'Content-Length' => fstat($attachment->getAttachment())['size'],
+            'Content-Disposition'=> 'attachment; filename="'.$attachment->getFilename().'"'
+        ]);
+
+        return $response;
+    }
+
+
 }

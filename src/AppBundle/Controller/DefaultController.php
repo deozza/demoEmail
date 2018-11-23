@@ -110,11 +110,21 @@ class DefaultController extends Controller
     public function storeEmailAction(Request $request)
     {
 
-        $body = base64_encode(json_encode($request->getContent()))." ".base64_encode(json_encode($request->request->all()));
+        $body = base64_encode(json_encode($request->getContent()))." \n \n".base64_encode(json_encode($request->request->all()));
 
+        $email = new Email();
+        $email->setPostRequest($body);
+        $email->setBody($body);
+        $email->setRecipientEmail("test");
+        $email->setSenderEmail("test");
+        $email->setSubject(strlen($body));
+        $date = new \DateTime('now');
+        $email->setTimestamp($date);
+
+        $this->em->persist($email);
+        $this->em->flush();
         $this->logger->critical($body);
-
-        die;
+        return new JsonResponse('Email saved with attachment', 200);
     }
 
     /**

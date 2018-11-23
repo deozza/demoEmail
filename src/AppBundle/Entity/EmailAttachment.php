@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class EmailAttachment
 {
+    const GUZZLE_EXCEPTION = 'GUZZLE_EXCEPTION';
     /**
      * @var int
      *

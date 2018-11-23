@@ -158,7 +158,7 @@ class DefaultController extends Controller
         {
             $client = new Client([
                 'base_uri' => 'https://se.api.mailgun.net/v3/domains/mailgun.everycheck.com/messages/',
-                'timeout' => 30.0,
+                'timeout' => 180.0,
             ]);
 
             //$guzzleLogFile = $this->getParameter('kernel.project_dir').'/var/logs/guzzle.log';
@@ -177,12 +177,19 @@ class DefaultController extends Controller
                 $dlFileUrl= $attachment['url'];
                 $this->logger->debug($dlFileUrl);
 
-                $response = $client->request("GET", $dlFileUrl,$body);
-
                 $filename = uniqid();
-                file_put_contents($filename, $response->getBody());
 
-                $file = new UploadedFile($filename,$attachment['name'],$attachment['content-type'],$attachment['size'],UPLOAD_ERR_OK);
+                try
+                {
+                   $response = $client->request("GET", $dlFileUrl,$body);
+                    file_put_contents($filename, $response->getBody());
+                    $file = new UploadedFile($filename,$attachment['name'],$attachment['content-type'],$attachment['size'],UPLOAD_ERR_OK);
+                }
+                catch (\Exception $e) 
+                {
+                    file_put_contents($filename, $e->getMessage());
+                    $file = new UploadedFile($filename,$attachment['name'],'text/plain',strlen($e->getMessage()),EmailAttachment::GUZZLE_EXCEPTION);
+                }
 
                 $emailAttachment = new EmailAttachment($email, $file);
                 $this->em->persist($emailAttachment);

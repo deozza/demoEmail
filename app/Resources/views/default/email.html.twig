@@ -27,6 +27,8 @@
                                     <p>{{ attachment.filename }} : UPLOAD_ERR_CANT_WRITE</p>
                                 {% elseif attachment.errorKind == constant('UPLOAD_ERR_EXTENSION')  %}
                                     <p>{{ attachment.filename }} : UPLOAD_ERR_EXTENSION</p>
+                                {% elseif attachment.errorKind == constant('GUZZLE_EXCEPTION')  %}
+                                    <p>{{ attachment.filename }} : GUZZLE_EXCEPTION</p>
                                 {% endif %}
                             {% else %}
                                 <a href="{{ path('dl_attachment', {'id' : attachment.id}) }}">Télécharger {{ attachment.filename }}</a>

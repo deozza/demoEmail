@@ -109,10 +109,11 @@ class DefaultController extends Controller
      */
     public function storeEmailAction(Request $request)
     {
-        $this->logger->critical(serialize($request->getContent()));
-        $this->logger->critical(serialize($request->request->all()));
 
-        print_r($request);
+        $body = base64_encode(json_encode($request->getContent()))." ".base64_encode(json_encode($request->request->all()));
+
+        $this->logger->critical($body);
+
         die;
     }
 

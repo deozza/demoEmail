@@ -156,11 +156,11 @@ class DefaultController extends Controller
         if(!empty($postedEmail['attachments']))
         {
             $client = new Client([
-                'base_uri' => 'https://https://se.api.mailgun.net/v3/domains/mailgun.everycheck.com/messages/',
+                'base_uri' => 'https://se.api.mailgun.net/v3/domains/mailgun.everycheck.com/messages/',
                 'timeout' => 30.0,
             ]);
 
-            $body = ["debug" => false];
+            $body = ["debug" => true];
             $body["headers"] = [
                 "Authorization: Basic ".base64_encode("api:".$this->getParameter('mailgun_api_key'))
             ];
@@ -169,7 +169,7 @@ class DefaultController extends Controller
             foreach($attachments as $attachment)
             {
                 $dlFileUrl= $attachment->url;
-                $this->logger->debug(serialize($dlFileUrl));
+                $this->logger->debug($dlFileUrl);
 
                 $file = $client->request("GET", $dlFileUrl);
 

@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -160,21 +161,33 @@ class DefaultController extends Controller
                 'timeout' => 30.0,
             ]);
 
-            $body = ["debug" => true];
+            //$guzzleLogFile = $this->getParameter('kernel.project_dir').'/var/logs/guzzle.log';
+            //$guzzleLogStream = fopen($guzzleLogFile,'w');
+            // stream_set_write_buffer($guzzleLogStream, 0);
+            $body = [
+                "debug" => false//$guzzleLogStream
+            ];
             $body["headers"] = [
-                "Authorization: Basic ".base64_encode("api:".$this->getParameter('mailgun_api_key'))
+                "Authorization" =>"Basic ".base64_encode("api:".$this->getParameter('mailgun_api_key'))
             ];
 
-            $attachments = json_decode($postedEmail['attachments']);
+            $attachments = json_decode($postedEmail['attachments'],true);
             foreach($attachments as $attachment)
             {
-                $dlFileUrl= $attachment->url;
+                $dlFileUrl= $attachment['url'];
                 $this->logger->debug($dlFileUrl);
 
-                $file = $client->request("GET", $dlFileUrl);
+                $response = $client->request("GET", $dlFileUrl,$body);
+
+                $filename = uniqid();
+                file_put_contents($filename, $response->getBody());
+
+                $file = new UploadedFile($filename,$attachment['name'],$attachment['content-type'],$attachment['size'],UPLOAD_ERR_OK);
 
                 $emailAttachment = new EmailAttachment($email, $file);
                 $this->em->persist($emailAttachment);
+
+                unlink($filename);
 
                 $this->logger->debug(serialize($emailAttachment));
 

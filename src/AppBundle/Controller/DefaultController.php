@@ -120,9 +120,9 @@ class DefaultController extends Controller
             "timestamp" => new \DateTime()
         ];
 
-        if(empty($postedEmail['body-html']))
+        if(!array_key_exists("body-html", $postedEmail))
         {
-            $postedEmail['body-html'] = !empty($postedEmail['body-plain']) ?: $postedEmail['stripped-html'];
+            $postedEmail['body-html'] = $postedEmail['body-plain'];
         }
 
         foreach($requiredKeyWithDefaultValue as $item=>$value)

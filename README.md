@@ -30,6 +30,7 @@ composer install
 ```bash
 heroku create
 heroku config:set SYMFONY_ENV=prod
+heroku config:set SECRET=your_secret_token
 heroku config:set MAILGUN_API_KEY=your_api_key
 git push heroku master
 ```

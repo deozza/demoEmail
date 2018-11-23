@@ -2,5 +2,5 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: '%env(SECRET)%'
     mailgun_api_key: '%env(MAILGUN_API_KEY)%'

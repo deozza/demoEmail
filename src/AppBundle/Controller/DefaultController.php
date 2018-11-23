@@ -6,6 +6,7 @@ use AppBundle\Entity\Email;
 use AppBundle\Entity\EmailAttachment;
 use AppBundle\Serializer\FormErrorSerializer;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -109,21 +110,78 @@ class DefaultController extends Controller
      */
     public function storeEmailAction(Request $request)
     {
+        $postedEmail = $request->request->all();
+        $this->logger->debug(base64_encode(json_encode($postedEmail)));
+        $requiredKeyWithDefaultValue = [
+            'from' => "none@none.none",
+            'recipient' =>"none@none.none",
+            "subject" => "no subject",
+            "body-html" => "<html><body>No body</body></html>",
+            "timestamp" => new \DateTime()
+        ];
 
-        $body = base64_encode(json_encode($request->getContent()))." \n \n".base64_encode(json_encode($request->request->all()));
+        if(empty($postedEmail['body-html']))
+        {
+            $postedEmail['body-html'] = !empty($postedEmail['body-plain']) ?: $postedEmail['stripped-html'];
+        }
+
+        foreach($requiredKeyWithDefaultValue as $item=>$value)
+        {
+            if(!array_key_exists($item,$postedEmail) || empty($postedEmail[$item]))
+            {
+                $postedEmail[$item] = $value;
+            }
+        }
+
+        if(!$postedEmail['timestamp'] instanceof \DateTime)
+        {
+            $date = new \DateTime();
+            $postedEmail["timestamp"] = $date;
+        }
 
         $email = new Email();
-        $email->setPostRequest($body);
-        $email->setBody($body);
-        $email->setRecipientEmail("test");
-        $email->setSenderEmail("test");
-        $email->setSubject(strlen($body));
-        $date = new \DateTime('now');
-        $email->setTimestamp($date);
+        $email->setPostRequest(base64_encode(json_encode($postedEmail)));
+        $email->setBody($postedEmail['body-html']);
+        $email->setRecipientEmail($postedEmail['recipient']);
+        $email->setSenderEmail($postedEmail['from']);
+        $email->setSubject($postedEmail['subject']);
+        $email->setTimestamp($postedEmail['timestamp']);
 
         $this->em->persist($email);
         $this->em->flush();
-        $this->logger->critical($body);
+
+        $this->logger->debug($email);
+
+        if(!empty($postedEmail['attachments']))
+        {
+            $client = new Client([
+                'base_uri' => 'https://https://se.api.mailgun.net/v3/domains/mailgun.everycheck.com/messages/',
+                'timeout' => 30.0,
+            ]);
+
+            $body = ["debug" => false];
+            $body["headers"] = [
+                "Authorization: Basic ".base64_encode("api:".$this->getParameter('mailgun_api_key'))
+            ];
+
+            $attachments = json_decode($postedEmail['attachments']);
+            foreach($attachments as $attachment)
+            {
+                $dlFileUrl= $attachment->url;
+                $this->logger->debug($dlFileUrl);
+
+                $file = $client->request("GET", $dlFileUrl);
+
+                $emailAttachment = new EmailAttachment($email, $file);
+                $this->em->persist($emailAttachment);
+
+                $this->logger->debug($emailAttachment);
+
+            }
+
+            $this->em->flush();
+        }
+
         return new JsonResponse('Email saved with attachment', 200);
     }
 

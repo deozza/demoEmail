@@ -2,6 +2,9 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Email;
+use AppBundle\Entity\EmailConversation;
+
 /**
  * EmailRepository
  *
@@ -10,4 +13,50 @@ namespace AppBundle\Repository;
  */
 class EmailRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function saveIncomingEmail(Array $postedEmail, $requestContent)
+    {
+        $email = new Email();
+        $email->setMessageMailgunId($postedEmail['Message-Id']);
+        $email->setBody($postedEmail['body-html']);
+        $email->setRecipientEmail($postedEmail['recipient']);
+        $email->setSenderEmail($postedEmail['from']);
+        $email->setSubject($postedEmail['subject']);
+        $email->setTimestamp($postedEmail['timestamp']);
+        $email->setPostRequest($requestContent);
+
+        $this->getEntityManager()->persist($email);
+        $this->getEntityManager()->flush();
+
+
+        $this->checkConversation($postedEmail, $email);
+
+        $this->getEntityManager()->flush();
+
+
+        return $email;
+    }
+
+    private function checkConversation(Array $postedEmail, Email $email)
+    {
+        if(!array_key_exists('In-Reply-To', $postedEmail))
+        {
+            $conversation = new EmailConversation();
+            $this->getEntityManager()->persist($conversation);
+            $email->setConversation($conversation);
+            return;
+        }
+
+        $originalEmail = $this->getEntityManager()->getRepository(Email::class)->findOneByMessageMailgunId($postedEmail['In-Reply-To']);
+
+        if(empty($originalEmail))
+        {
+            $conversation = new EmailConversation();
+            $this->getEntityManager()->persist($conversation);
+            $email->setConversation($conversation);
+            return;
+        }
+
+        $email->setConversation($originalEmail->getConversation());
+        return;
+    }
 }

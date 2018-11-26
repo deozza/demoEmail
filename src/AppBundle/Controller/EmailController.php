@@ -9,6 +9,7 @@ use AppBundle\Form\ReplyFormType;
 use AppBundle\Serializer\FormErrorSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Mailgun\Mailgun;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -169,7 +170,7 @@ class EmailController extends Controller
     {
         $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
 
-        if(empty($email)) return $this->render('default/404.html.twig');
+        if(empty($email)) return $this->render('errors/404.html.twig');
 
         $reply = new Email();
 
@@ -177,12 +178,32 @@ class EmailController extends Controller
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid())
         {
+            $msg = Mailgun::create($this->getParameter('mailgun_api_key'));
+
+            try
+            {
+                $msg->messages()->send(
+                    $email->getSenderEmail(), [
+                        'from' => $email->getRecipientEmail(),
+                        'to' => $email->getSenderEmail(),
+                        'subject' => $email->getSubject(),
+                        'text' => $reply->getBody(),
+                        'h:Reply-To' => $email->getMessageMailgunId()
+                    ]
+                );
+            }
+            catch (\Exception $e)
+            {
+                return $this->render('errors/400.html.twig', [$e->getMessage()]);
+            }
+
             $reply->setSenderEmail($email->getRecipientEmail());
             $reply->setRecipientEmail($email->getSenderEmail());
             $reply->setSubject($email->getSubject());
             $reply->setTimestamp(new \DateTime('now'));
             $reply->setConversation($email->getConversation());
             $reply->setPostRequest("request");
+            $reply->setMessageMailgunId("emailId");
 
             $this->em->persist($reply);
 

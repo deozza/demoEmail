@@ -2,7 +2,7 @@
 
 {% block body %}
     {% for email in emails|reverse %}
-    <div class="card">
+    <div class="card" id="email-{{ email.id }}">
         <div class="row">
             <div class="col">
                 <h4>{{ email.senderEmail }}</h4>
@@ -40,14 +40,14 @@
                                     <p>{{ email.attachment.filename }} : GUZZLE_EXCEPTION</p>
                                 {% endif %}
                             {% else %}
-                                <a href="{{ path('dl_attachment', {'id' : email.attachment.id}) }}">Télécharger {{ email.attachment.filename }}</a>
+                                <a href="{{ path('dl_attachment', {'id' : email.attachment.id}) }}" id="attachment-{{ email.attachment.id }}" class="btn btn-primary">Télécharger {{ email.attachment.filename }}</a>
                             {% endif %}
                         </div>
                     {% endfor %}
                 {% endif %}
             </div>
             <div class="card-footer">
-                <a href="{{ path('reply_to_email', {'id' : email.id}) }}" class="btn btn-primary">Répondre</a>
+                <a href="{{ path('reply_to_email', {'email_id' : email.id, 'conv_id': email.conversation.id}) }}" class="btn btn-primary">Répondre</a>
             </div>
         </div>
     </div>

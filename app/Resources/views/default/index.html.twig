@@ -16,7 +16,7 @@
     {% if conversations is not null and conversations is defined %}
         {% for conversation in conversations %}
             {% set lastMessage = conversation.emails|last %}
-            <tr>
+            <tr id="conversation-{{ conversation.id }}">
                 <td>{{ lastMessage.senderEmail }}</td>
                 <td>{{ lastMessage.subject}}</td>
                 <td>{{ lastMessage.timestamp|date('d/m/Y H:i:s') }}</td>

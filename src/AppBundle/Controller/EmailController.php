@@ -164,11 +164,16 @@ class EmailController extends Controller
     }
 
     /**
-     * @Route("/email/{id}/reply", name="reply_to_email", methods={"POST","GET"})
+     * @Route("/conversation/{conv_id}/email/{email_id}/reply", name="reply_to_email", methods={"POST","GET"})
      */
-    public function ReplyAction($id, Request $request)
+    public function ReplyAction($conv_id, $email_id, Request $request)
     {
-        $email = $this->em->getRepository('AppBundle:Email')->findOneById($id);
+        $email = $this->em->getRepository('AppBundle:Email')->findOneBy(
+            [
+                'conversation' => $conv_id,
+                'id' => $email_id
+            ]
+        );
 
         if(empty($email)) return $this->render('errors/404.html.twig');
 
@@ -182,13 +187,13 @@ class EmailController extends Controller
 
             try
             {
-                $msg->messages()->send(
-                    $email->getSenderEmail(), [
+                $response = $msg->messages()->send(
+                    $this->getParameter('mailgun_domain'), [
                         'from' => $email->getRecipientEmail(),
                         'to' => $email->getSenderEmail(),
                         'subject' => $email->getSubject(),
                         'text' => $reply->getBody(),
-                        'h:Reply-To' => $email->getMessageMailgunId()
+                        'h:Reply-To' => $email->getMessageMailgunId(),
                     ]
                 );
             }
@@ -203,7 +208,7 @@ class EmailController extends Controller
             $reply->setTimestamp(new \DateTime('now'));
             $reply->setConversation($email->getConversation());
             $reply->setPostRequest("request");
-            $reply->setMessageMailgunId("emailId");
+            $reply->setMessageMailgunId($response->getId());
 
             $this->em->persist($reply);
 

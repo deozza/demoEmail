@@ -2,8 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use AppBundle\DataFixtures\DataFixturesTestCase;
 
 
 /**
@@ -12,9 +11,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @group legacy
  */
-class DefaultControllerTest extends WebTestCase
+class EmailControllerTest extends DataFixturesTestCase
 {
-    public function getAllEmail()
+    public function testGetAllEmail()
     {
         $client = static::createClient();
 
@@ -27,11 +26,9 @@ class DefaultControllerTest extends WebTestCase
         $client = static::createClient();
 
         $crawler = $client->request('POST', '/email/store', json_decode(file_get_contents(__DIR__."/payload/nopj.json"), true));
-        var_dump($crawler);
-
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $crawler = $client->request('GET', '/email/1');
+        $crawler = $client->request('GET', '/conversation/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         //$this->assertContains('Subject is cool', $crawler->filter('h5')->text());
 
@@ -45,7 +42,7 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('POST', '/email/store',json_decode(file_get_contents(__DIR__."/payload/lightpj.json"), true));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $crawler = $client->request('GET', '/email/2');
+        $crawler = $client->request('GET', '/conversation/1');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         //$this->assertContains('Télécharger light.png', $crawler->filter('a')->text());
     }
@@ -108,4 +105,20 @@ class DefaultControllerTest extends WebTestCase
         $this->assertContains('Télécharger light.png', $crawler->filter('a')->text());
     }
 */
+
+    public function testReplyToEmail()
+    {
+
+        $client = static::createClient();
+
+        $crawler = $client->request('POST', '/email/store', json_decode(file_get_contents(__DIR__."/payload/nopj.json"), true));
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('GET', '/conversation/1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('POST', '/conversation/1/email/1/reply',json_decode(file_get_contents(__DIR__."/payload/reply.json"), true));
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
 }

@@ -13,14 +13,15 @@
     </tr>
     </thead>
     <tbody>
-    {% if emails is not null and emails is defined%}
-        {% for email in emails %}
-            <tr>
-                <td>{{ email.senderEmail }}</td>
-                <td>{{ email.subject}}</td>
-                <td>{{ email.timestamp|date('d/m/Y H:i:s') }}</td>
-                <td>{{ email.attachments|length }}</td>
-                <td><a href="{{ path('get_email_content', {'id' : email.id} ) }}"><button class="btn btn-primary">Lire</button></a></td>
+    {% if conversations is not null and conversations is defined %}
+        {% for conversation in conversations %}
+            {% set lastMessage = conversation.emails|last %}
+            <tr id="conversation-{{ conversation.id }}">
+                <td>{{ lastMessage.senderEmail }}</td>
+                <td>{{ lastMessage.subject}}</td>
+                <td>{{ lastMessage.timestamp|date('d/m/Y H:i:s') }}</td>
+                <td>{{ lastMessage.attachments|length }}</td>
+                <td><a href="{{ path('get_conversation_content', {'id' : conversation.id} ) }}"><button class="btn btn-primary">Lire</button></a></td>
             </tr>
         {% endfor %}
     {% endif %}

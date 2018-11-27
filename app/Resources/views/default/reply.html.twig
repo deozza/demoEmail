@@ -1,6 +1,14 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
+
+    <div class="row">
+            {{ form_start(replyFormType) }}
+            {{ form_row(replyFormType.body) }}
+            <button type="submit" class="btn btn-success">Envoyer</button>
+            {{ form_end(replyFormType) }}
+    </div>
+
     <div class="card">
         <h4 class="card-header">{{ email.senderEmail }}</h4>
         <div class="card-body">

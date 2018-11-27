@@ -4,3 +4,4 @@
 parameters:
     secret: '%env(SECRET)%'
     mailgun_api_key: '%env(MAILGUN_API_KEY)%'
+    mailgun_domain: '%env(MAILGUN_DOMAIN)%'

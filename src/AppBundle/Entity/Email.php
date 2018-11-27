@@ -23,6 +23,14 @@ class Email
     private $id;
 
     /**
+     * email id specified in the mailgun post request
+     * @var string
+     *
+     * @ORM\Column(name="email_mailgun_id", type="string")
+     */
+    private $messageMailgunId;
+
+    /**
      * email of the sender
      * @var string
      *
@@ -77,6 +85,14 @@ class Email
      * @var Email
      */
     protected $attachments;
+
+    /**
+     * User owning this token
+     * @ORM\ManyToOne(targetEntity="EmailConversation", inversedBy="emails")
+     * @ORM\JoinColumn(name="conversation_id", referencedColumnName="id")
+     * @var EmailConversation
+     */
+    protected $conversation;
 
     public function __construct()
     {
@@ -198,5 +214,36 @@ class Email
         return $this->attachments;
     }
 
+    /**
+     * @return string
+     */
+    public function getMessageMailgunId()
+    {
+        return $this->messageMailgunId;
+    }
+
+    /**
+     * @param string $messageMailgunId
+     */
+    public function setMessageMailgunId($messageMailgunId)
+    {
+        $this->messageMailgunId = $messageMailgunId;
+    }
+
+    /**
+     * @return EmailConversation
+     */
+    public function getConversation()
+    {
+        return $this->conversation;
+    }
+
+    /**
+     * @param EmailConversation $conversation
+     */
+    public function setConversation($conversation)
+    {
+        $this->conversation = $conversation;
+    }
 }
 

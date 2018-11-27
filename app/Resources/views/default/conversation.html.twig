@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {% for email in emails|reverse %}
+    <div class="card" id="email-{{ email.id }}">
+        <div class="row">
+            <div class="col">
+                <h4>{{ email.senderEmail }}</h4>
+            </div>
+            <div class="col">
+                <p>Le {{ email.timestamp|date('d/m/Y H:i:s') }}</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">{{ email.subject }}</h5>
+            <div>{{ email.body|raw }}</div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                {% if email.attachments is defined and email.attachments is not null %}
+                    {% for attachment in email.attachments %}
+                        <div class="col">
+                            {% if email.attachment.errorKind != constant('UPLOAD_ERR_OK') %}
+                                {% if email.attachment.errorKind == constant('UPLOAD_ERR_INI_SIZE')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_INI_SIZE</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_FORM_SIZE')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_FORM_SIZE</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_PARTIAL')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_PARTIAL</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_NO_FILE')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_NO_FILE</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_NO_TMP_DIR')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_NO_TMP_DIR</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_CANT_WRITE')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_CANT_WRITE</p>
+                                {% elseif email.attachment.errorKind == constant('UPLOAD_ERR_EXTENSION')  %}
+                                    <p>{{ email.attachment.filename }} : UPLOAD_ERR_EXTENSION</p>
+                                {% elseif email.attachment.errorKind == constant('GUZZLE_EXCEPTION')  %}
+                                    <p>{{ email.attachment.filename }} : GUZZLE_EXCEPTION</p>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('dl_attachment', {'id' : email.attachment.id}) }}" id="attachment-{{ email.attachment.id }}" class="btn btn-primary">Télécharger {{ email.attachment.filename }}</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{{ path('reply_to_email', {'email_id' : email.id, 'conv_id': email.conversation.id}) }}" class="btn btn-primary">Répondre</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

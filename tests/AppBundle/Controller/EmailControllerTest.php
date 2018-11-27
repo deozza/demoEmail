@@ -11,7 +11,7 @@ use AppBundle\DataFixtures\DataFixturesTestCase;
  *
  * @group legacy
  */
-class DefaultControllerTest extends DataFixturesTestCase
+class EmailControllerTest extends DataFixturesTestCase
 {
     public function testGetAllEmail()
     {
